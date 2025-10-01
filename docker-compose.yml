@@ -1,0 +1,19 @@
+# Docker Compose конфигурация для ИИ-сервиса анализа КТ
+version: '3.8'
+
+services:
+  # Сервис для инференса (анализа КТ)
+  inference:
+    build: .
+    container_name: ct-analysis-inference
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./configs:/app/configs
+      - ./weights:/app/weights
+    environment:
+      - CUDA_VISIBLE_DEVICES=  # Отключение GPU для совместимости
+      - PYTHONPATH=/app
+    command: bash -lc "python -m src.main --mode infer --input_dir data/input_zips --output_path data/results/results.xlsx"
+    restart: "no"
+
